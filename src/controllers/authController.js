@@ -37,9 +37,12 @@ const register = async(req, res) => {
         res.status(400).json({message: `Error registering: ${error}` })
     }
 }
+
 const login = async(req, res) => {
     try{
         const { name, email, password } = req.body;
+
+        console.log(name);
 
         const userExists = await prisma.user.findUnique({ where: { email: email }});
     
@@ -55,6 +58,7 @@ const login = async(req, res) => {
         return res.status(200).json({
             status: "success",
             user: {
+                id: userExists.id,
                 name: userExists.name,
                 email: userExists.email
             },
@@ -62,8 +66,7 @@ const login = async(req, res) => {
         });
     } catch(error) {
         res.json({message: `Error: ${error}`});
-    }
-    
+    }   
 };
 
 const logout = async(req, res) => {
@@ -76,5 +79,6 @@ const logout = async(req, res) => {
         message: "Logged out successfully"
     });
 };
+
 
 export { login, logout, register };

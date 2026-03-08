@@ -30,5 +30,8 @@ model Entry {
   note String
   userId String
   user User @relation(fields: [userId], references: [id])
+  
+
+  
 }
 
