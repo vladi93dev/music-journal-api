@@ -1,7 +1,5 @@
 # 🎵 Music Journal API
 
-![Status](https://img.shields.io/badge/status-in%20progress-yellow)
-
 A RESTful API for logging and tracking personal music listening history. Built as a portfolio project to demonstrate backend development with Node.js, Express, and PostgreSQL.
 
 ---
