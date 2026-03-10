@@ -1,9 +1,9 @@
 import express from 'express';
-import { createEntry } from '../controllers/albumController.js';
+import { createEntry, getEntries, getEntryById, updateEntryById, deleteEntryById } from '../controllers/albumController.js';
 import { generateToken } from '../config/generateToken.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import requestValidator from '../middlewares/requestValidator.js';
-import createEntrySchema from '../validators/createEntrySchema.js';
+import { createEntrySchema, updateEntrySchema } from '../validators/entrySchemas.js';
 
 
 const router = express.Router();
@@ -11,7 +11,15 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+router.get('/', getEntries);
+
+router.get('/:id', getEntryById);
+
 router.post('/', requestValidator(createEntrySchema), createEntry);
+
+router.put('/:id', requestValidator(updateEntrySchema), updateEntryById);
+
+router.delete('/:id', deleteEntryById);
 
 
 
