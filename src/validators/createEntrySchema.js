@@ -1,8 +1,8 @@
 import z from 'zod';
 
 const createEntrySchema = z.object({
-    title: z.string({error: "Title is required"}),
-    artist: z.string({error: "Artist is required"}),
+    title: z.string({error: "Title is required"}).min(1, "Title field cannot be empty"),
+    artist: z.string({error: "Artist is required"}).min(1, "Artist field cannot be empty"),
     genres: z.array(z.string()).min(1, "At least one genre is required"),
     rating: z
     .coerce

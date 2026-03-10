@@ -8,14 +8,6 @@ const requestValidator = (schema) => {
         }
         next()
     }
-
-
-
-
-
-
-
 };
-
 
 export default requestValidator;

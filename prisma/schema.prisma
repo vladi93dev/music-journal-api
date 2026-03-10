@@ -26,8 +26,8 @@ model Entry {
   title String
   artist String
   genres String[]
-  rating Int
-  note String
+  rating Int?
+  note String?
   userId String
   user User @relation(fields: [userId], references: [id])  
 }
