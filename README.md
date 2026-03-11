@@ -81,7 +81,11 @@ npm run dev
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/entries` | Create a new entry |
+| GET    | `/api/entries`        | Get all entries for logged-in user |
+| GET    | `/api/entries/:id`    | Get a single entry                 |
+| POST | `/api/entries`          | Create a new entry                 |
+| PUT    | `/api/entries/:id`    | Update an entry                    |
+| DELETE | `/api/entries/:id`    | Delete an entry                    |
 
 ---
 
@@ -95,8 +99,8 @@ model Entry {
   title String
   artist String
   genres String[]
-  rating Int
-  note String
+  rating Int?
+  note String?
   userId String
   user User @relation(fields: [userId], references: [id])
 }
