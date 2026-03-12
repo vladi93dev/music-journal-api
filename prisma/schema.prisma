@@ -25,7 +25,7 @@ model Entry {
   id String @id @default(uuid())
   title String
   artist String
-  genres String[]
+  genre String
   rating Int?
   note String?
   userId String

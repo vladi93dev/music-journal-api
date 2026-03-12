@@ -2,14 +2,15 @@ import { prisma } from '../config/db.js';
 import { generateToken } from '../config/generateToken.js';
 
 const getEntries = async (req, res) => {
-    const { artist, rating } = req.query;
+    const { artist, rating, genre } = req.query;
     console.log(req.query);
     try {
         const entries = await prisma.entry.findMany({
             where: {
                 userId: req.user.userId,
                 ...( artist && { artist: {equals: artist, mode: 'insensitive'}}),
-                ...(rating &&  { rating: parseInt(rating)})
+                ...( rating &&  { rating: parseInt(rating)} ),
+                ...( genre && { genre: { equals: genre, mode: 'insensitive' }})
             }
         });
         res.status(200).json({ entries })
@@ -39,13 +40,13 @@ const getEntryById = async (req, res) => {
 }
 
 const createEntry = async (req, res) => {
-    const { title, artist, genres, rating, note, userId } = req.body;
+    const { title, artist, genre, rating, note, userId } = req.body;
 
     try {
         const newEntry = await prisma.entry.create({ data: {
             title,
             artist,
-            genres,
+            genre,
             rating,
             note,
             userId: req.user.userId
@@ -101,6 +102,15 @@ const deleteEntryById = async(req, res) => {
 
 }
 
+const getEntriesGenres = async(req, res) => {
+    console.log('Genres reached');
+    const entries = await prisma.entry.findMany({
+        where: { userId: req.user.userId },
+        select: { genre: true }
+    });
+
+    res.status(200).json(entries.map(entry => entry.genre));
+}
 
 
-export { createEntry, getEntries, getEntryById, updateEntryById, deleteEntryById };
+export { createEntry, getEntries, getEntryById, updateEntryById, deleteEntryById, getEntriesGenres };
