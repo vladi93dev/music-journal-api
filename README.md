@@ -10,6 +10,7 @@ A RESTful API for logging and tracking personal music listening history. Built a
 - **Album entry management** — Full CRUD: create, read, update, and delete listening log entries
 - **Error handling** — Centralised global error handler for consistent API responses
 - **Request validation** — Input validation using Zod schemas
+- **Filtering** — Filter entries by artist and rating via query parameters
 
 ---
 
@@ -81,11 +82,11 @@ npm run dev
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET    | `/api/entries`        | Get all entries for logged-in user |
-| GET    | `/api/entries/:id`    | Get a single entry                 |
-| POST | `/api/entries`          | Create a new entry                 |
-| PUT    | `/api/entries/:id`    | Update an entry                    |
-| DELETE | `/api/entries/:id`    | Delete an entry                    |
+| GET | `/api/entries`           | Get all entries (supports `?artist=` and `?rating=` filters)
+| GET    | `/api/entries/:id`    | Get a single entry                 
+| POST | `/api/entries`          | Create a new entry                 
+| PUT    | `/api/entries/:id`    | Update an entry                    
+| DELETE | `/api/entries/:id`    | Delete an entry                    
 
 ---
 
