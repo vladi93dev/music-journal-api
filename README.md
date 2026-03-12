@@ -124,7 +124,7 @@ model User {
 ## Accepted Genres
 When creating or updating an entry, the `genre` field must be one of the following values:
 
-`Rock` · `Pop` · `Jazz` · `Hip-Hop` · `Classical` · `R&B` · `Electronic` · `Country` · `Metal` · `Folk`
+· `Rock` · `Pop` · `Jazz` · `Hip-Hop` · `Classical` · `R&B` · `Electronic` · `Country` · `Metal` · `Folk`
 ---
 ## Project Structure
 
