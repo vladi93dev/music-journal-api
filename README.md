@@ -10,7 +10,7 @@ A RESTful API for logging and tracking personal music listening history. Built a
 - **Album entry management** — Full CRUD: create, read, update, and delete listening log entries
 - **Error handling** — Centralised global error handler for consistent API responses
 - **Request validation** — Input validation using Zod schemas
-- **Filtering** — Filter entries by artist and rating via query parameters
+- **Filtering** — Filter entries by artist, genre, and rating via query parameters
 
 ---
 
@@ -82,11 +82,13 @@ npm run dev
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/entries`           | Get all entries (supports `?artist=` and `?rating=` filters)
-| GET    | `/api/entries/:id`    | Get a single entry                 
+| GET | `/api/entries` | Get all entries (supports `?artist=`, `?genre=`, and `?rating=` filters)
+| GET    | `/api/entries/:id`    | Get a single entry   
+| GET | `/api/entries/genres`    | Get all distinct genres from the user's entries 
 | POST | `/api/entries`          | Create a new entry                 
 | PUT    | `/api/entries/:id`    | Update an entry                    
-| DELETE | `/api/entries/:id`    | Delete an entry                    
+| DELETE | `/api/entries/:id`    | Delete an entry
+
 
 ---
 
@@ -99,7 +101,7 @@ model Entry {
   id String @id @default(uuid())
   title String
   artist String
-  genres String[]
+  genre String
   rating Int?
   note String?
   userId String
@@ -118,10 +120,12 @@ model User {
   entries Entry[] 
 }
 ```
-
-
 ---
+## Accepted Genres
+When creating or updating an entry, the `genre` field must be one of the following values:
 
+· `Rock` · `Pop` · `Jazz` · `Hip-Hop` · `Classical` · `R&B` · `Electronic` · `Country` · `Metal` · `Folk`
+---
 ## Project Structure
 
 ```
@@ -138,7 +142,6 @@ src/
 
 ## Roadmap
 
-- [ ] Filtering & search by artist, genre, and rating
 - [ ] Listening statistics endpoint
 
 ---
