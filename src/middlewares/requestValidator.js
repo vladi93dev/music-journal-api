@@ -6,6 +6,9 @@ const requestValidator = (schema, source='body') => {
             const errors = Object.values(result.error.flatten().fieldErrors).flat();
             return res.status(400).json({ message: errors.join(", ") });
         }
+
+        req[source] = result.data;
+
         next()
     }
 };

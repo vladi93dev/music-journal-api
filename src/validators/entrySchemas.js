@@ -19,7 +19,8 @@ const createEntrySchema = z.object({
 const updateEntrySchema = z.object({
     title: z.string({error: "Title is required"}).min(1, "Title field cannot be empty").optional(),
     artist: z.string({error: "Artist is required"}).min(1, "Artist field cannot be empty").optional(),
-    genre: z.string().min(1, "Genre is required"),
+    genre: z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
+    error: 'Invalid genre...'}).optional(),
     rating: z
     .coerce
     .number()
@@ -36,7 +37,7 @@ const getEntryQuerySchema = z.object({
     .min(1, "Rating must be between 1 - 10")
     .max(10, "Rating must be between 1 - 10")
     .optional(),
-    genre: z.transform((val) => val.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('-')).pipe(z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
+    genre: z.string().transform((val) => val.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('-')).pipe(z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
         error: 'Invalid genre. Accepted genres: Rock, Pop, Jazz, Hip-Hop, Classical, R&B, Electronic, Country, Metal, Folk'
     })).optional()
 });
