@@ -7,8 +7,7 @@ const requestValidator = (schema, source='body') => {
             return res.status(400).json({ message: errors.join(", ") });
         }
 
-        req[source] = result.data;
-
+        req.validated = result.data;
         next()
     }
 };

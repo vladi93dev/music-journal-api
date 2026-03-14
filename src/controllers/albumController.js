@@ -2,7 +2,7 @@ import { prisma } from '../config/db.js';
 import { generateToken } from '../config/generateToken.js';
 
 const getEntries = async (req, res) => {
-    const { artist, rating, genre } = req.query;
+    const { artist, rating, genre } = req.validated;
     console.log(req.query);
     try {
         const entries = await prisma.entry.findMany({

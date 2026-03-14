@@ -32,7 +32,7 @@ const updateEntrySchema = z.object({
 });
 
 const getEntryQuerySchema = z.object({
-    artist: z.string().min(1).optional(),
+    artist: z.string().min(1).transform(val => decodeURIComponent(val)).optional(),
     rating: z.coerce.number().int()
     .min(1, "Rating must be between 1 - 10")
     .max(10, "Rating must be between 1 - 10")
