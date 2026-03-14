@@ -112,5 +112,32 @@ const getEntriesGenres = async(req, res) => {
     res.status(200).json(entries.map(entry => entry.genre));
 }
 
+const getStats = async(req, res) => {
+    try {
+        const [totalEntries, ratingData] = await Promise.all([
 
-export { createEntry, getEntries, getEntryById, updateEntryById, deleteEntryById, getEntriesGenres };
+            prisma.entry.count({
+                where: { userId: req.user.userId }
+            }),
+
+            prisma.entry.aggregate({
+                where: { userId: req.user.userId },
+                _avg: { rating: true }
+            }),
+        ])
+
+         res.status(200).json({
+                totalEntries,
+                averageRating: ratingData._avg.rating
+          })
+        
+
+    } catch(error) {
+        res.status(400).json({ message: error.message });
+    }
+    
+
+    
+}
+
+export { createEntry, getEntries, getEntryById, updateEntryById, deleteEntryById, getEntriesGenres, getStats };
