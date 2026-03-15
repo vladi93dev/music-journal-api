@@ -114,7 +114,7 @@ const getEntriesGenres = async(req, res) => {
 
 const getStats = async(req, res) => {
     try {
-        const [totalEntries, ratingData] = await Promise.all([
+        const [totalEntries, ratingData, highestEntry, lowestEntry, genreData, latestEntry ] = await Promise.all([
 
             prisma.entry.count({
                 where: { userId: req.user.userId }
@@ -124,11 +124,43 @@ const getStats = async(req, res) => {
                 where: { userId: req.user.userId },
                 _avg: { rating: true }
             }),
+
+            prisma.entry.findFirst({
+                where: { userId: req.user.userId },
+                orderBy: [{ rating: 'desc' }, {createdAt: 'desc'}],
+                select: { title: true, artist: true, rating: true }
+            }),
+
+             prisma.entry.findFirst({
+                where: { userId: req.user.userId },
+                orderBy: [{ rating: 'asc' }, {createdAt: 'desc'}],
+                select: { title: true, artist: true, rating: true }
+            }),
+
+            prisma.entry.groupBy({
+                by: ['genre'],
+                where: { userId: req.user.userId },
+                _count: { genre: true },
+                orderBy: { _count: { genre: 'desc'}}
+            }),
+
+            prisma.entry.findFirst({
+                where: { userId: req.user.userId}, 
+                orderBy: [{createdAt: 'desc'}],
+                select: {title: true, artist: true, createdAt: true}
+            })
         ])
 
-         res.status(200).json({
+         res.status(500).json({
                 totalEntries,
-                averageRating: ratingData._avg.rating
+                averageRating: ratingData._avg.rating,
+                highest: highestEntry,
+                lowest: lowestEntry,
+                genreBreakdown: genreData.map(val => ({
+                   genre: val.genre,
+                   count: val._count.genre 
+                })),
+                latestEntry: latestEntry
           })
         
 
