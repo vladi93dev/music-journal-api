@@ -3,7 +3,7 @@ import { generateToken } from '../config/generateToken.js';
 
 const getEntries = async (req, res) => {
     const { artist, rating, genre } = req.validated;
-    console.log(req.query);
+
     try {
         const entries = await prisma.entry.findMany({
             where: {
@@ -40,7 +40,7 @@ const getEntryById = async (req, res) => {
 }
 
 const createEntry = async (req, res) => {
-    const { title, artist, genre, rating, note, userId } = req.body;
+    const { title, artist, genre, rating, note } = req.validated;
 
     try {
         const newEntry = await prisma.entry.create({ data: {
@@ -51,7 +51,7 @@ const createEntry = async (req, res) => {
             note,
             userId: req.user.userId
         }});
-        res.status(200).json({ message: `${newEntry.artist} added` });
+        res.status(200).json({ message: `${newEntry.title} added` });
     } catch(error) {
         res.status(400).json({ message: `error: ${error.message}`});
     }
@@ -59,16 +59,18 @@ const createEntry = async (req, res) => {
 
 const updateEntryById = async (req, res) => {
     try {
-        const entry = await prisma.entry.update({
-            where: { id: req.params.id },
-            data: req.body 
-        });
+        const entry = await prisma.entry.findUnique({where: { id: req.params.id }});
 
         if(!entry || entry.userId !== req.user.userId) {
-            return res.status(404).json({ error: "Entry not found"})
+            return res.status(404).json({message: "Entry not found"});
         }
+        
+        const entryUpdated = await prisma.entry.update({
+            where: { id: req.params.id },
+            data: req.validated 
+        });
 
-        res.status(200).json(entry);
+        res.status(200).json(`${entry.title} has been updated`);
         
     } catch(error) {
         return res.status(400).json({ message: `error: ${error}`})
@@ -103,10 +105,11 @@ const deleteEntryById = async(req, res) => {
 }
 
 const getEntriesGenres = async(req, res) => {
-    console.log('Genres reached');
+
     const entries = await prisma.entry.findMany({
         where: { userId: req.user.userId },
-        select: { genre: true }
+        select: { genre: true },
+        distinct: ['genre']
     });
 
     res.status(200).json(entries.map(entry => entry.genre));
@@ -114,7 +117,7 @@ const getEntriesGenres = async(req, res) => {
 
 const getStats = async(req, res) => {
     try {
-        const [totalEntries, ratingData, highestEntry, lowestEntry, genreData, latestEntry ] = await Promise.all([
+        const [totalEntries, ratingData, highestEntry, lowestEntry, genreData, ratingDistData, latestEntry ] = await Promise.all([
 
             prisma.entry.count({
                 where: { userId: req.user.userId }
@@ -144,6 +147,13 @@ const getStats = async(req, res) => {
                 orderBy: { _count: { genre: 'desc'}}
             }),
 
+            prisma.entry.groupBy({
+                by: ['rating'],
+                where: { userId: req.user.userId },
+                _count: {rating: true},
+                orderBy: {_count: {rating: 'desc'}}
+            }),
+
             prisma.entry.findFirst({
                 where: { userId: req.user.userId}, 
                 orderBy: [{createdAt: 'desc'}],
@@ -153,12 +163,16 @@ const getStats = async(req, res) => {
 
          res.status(500).json({
                 totalEntries,
-                averageRating: ratingData._avg.rating,
+                averageRating: parseFloat(ratingData._avg.rating.toFixed(1)),
                 highest: highestEntry,
                 lowest: lowestEntry,
                 genreBreakdown: genreData.map(val => ({
                    genre: val.genre,
                    count: val._count.genre 
+                })),
+                ratingDistData: ratingDistData.map(val => ({
+                    rating: val.rating,
+                    count: val._count.rating
                 })),
                 latestEntry: latestEntry
           })

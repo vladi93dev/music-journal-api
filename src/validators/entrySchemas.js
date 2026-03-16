@@ -3,9 +3,9 @@ import z from 'zod';
 const createEntrySchema = z.object({
     title: z.string({error: "Title is required"}).min(1, "Title field cannot be empty"),
     artist: z.string({error: "Artist is required"}).min(1, "Artist field cannot be empty"),
-    genre: z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
+    genre: z.string().transform((val) => val.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('-')).pipe(z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
         error: 'Invalid genre. Accepted genres: Rock, Pop, Jazz, Hip-Hop, Classical, R&B, Electronic, Country, Metal, Folk'
-    }),
+    })).optional(),
     rating: z
     .coerce
     .number()
@@ -19,8 +19,9 @@ const createEntrySchema = z.object({
 const updateEntrySchema = z.object({
     title: z.string({error: "Title is required"}).min(1, "Title field cannot be empty").optional(),
     artist: z.string({error: "Artist is required"}).min(1, "Artist field cannot be empty").optional(),
-    genre: z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
-    error: 'Invalid genre...'}).optional(),
+    genre: z.string().transform((val) => val.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('-')).pipe(z.enum(['Rock', 'Pop', 'Jazz', 'Hip-Hop', 'Classical', 'R&B', 'Electronic', 'Country', 'Metal', 'Folk'], {
+        error: 'Invalid genre. Accepted genres: Rock, Pop, Jazz, Hip-Hop, Classical, R&B, Electronic, Country, Metal, Folk'
+    })).optional(),
     rating: z
     .coerce
     .number()
