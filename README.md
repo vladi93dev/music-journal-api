@@ -85,6 +85,7 @@ npm run dev
 | GET | `/api/entries` | Get all entries (supports `?artist=`, `?genre=`, and `?rating=` filters)
 | GET    | `/api/entries/:id`    | Get a single entry   
 | GET | `/api/entries/genres`    | Get all distinct genres from the user's entries 
+| GET | `/api/entries/stats`     | Get listening statistics for the current user 
 | POST | `/api/entries`          | Create a new entry                 
 | PUT    | `/api/entries/:id`    | Update an entry                    
 | DELETE | `/api/entries/:id`    | Delete an entry
@@ -106,6 +107,7 @@ model Entry {
   note String?
   userId String
   user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())  
 }
 ```
 
@@ -137,12 +139,6 @@ src/
 ├── prisma/           # Prisma schema and migrations
 └── app.js            # Express app entry point
 ```
-
----
-
-## Roadmap
-
-- [ ] Listening statistics endpoint
 
 ---
 
