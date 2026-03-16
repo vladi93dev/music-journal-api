@@ -11,6 +11,7 @@ A RESTful API for logging and tracking personal music listening history. Built a
 - **Error handling** — Centralised global error handler for consistent API responses
 - **Request validation** — Input validation using Zod schemas
 - **Filtering** — Filter entries by artist, genre, and rating via query parameters
+- **Listening statistics** — Aggregated stats including average rating, genre breakdown, and rating distribution
 
 ---
 
@@ -18,13 +19,13 @@ A RESTful API for logging and tracking personal music listening history. Built a
 
 | Layer | Technology |
 |---|---|
-| Runtime | Node.js |
-| Framework | Express |
-| Database | PostgreSQL (hosted on Neon) |
-| ORM | Prisma |
-| Authentication | JWT + httpOnly cookies |
-| Password hashing | bcryptjs |
-| Validation | Zod |
+| Runtime | Node.js 
+| Framework | Express 
+| Database | PostgreSQL (hosted on Neon) 
+| ORM | Prisma 
+| Authentication | JWT + httpOnly cookies 
+| Password hashing | bcryptjs 
+| Validation | Zod 
 
 ---
 
@@ -74,18 +75,18 @@ npm run dev
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Log in and receive a JWT cookie |
-| POST | `/api/auth/logout` | Clear the auth cookie |
+| POST | `/api/auth/register` | Register a new user 
+| POST | `/api/auth/login`    | Log in and receive a JWT cookie 
+| POST | `/api/auth/logout`   | Clear the auth cookie 
 
 ### Entries
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/entries` | Get all entries (supports `?artist=`, `?genre=`, and `?rating=` filters)
+| GET | `/api/entries`           | Get all entries (supports `?artist=`, `?genre=`, and `?rating=` filters)
 | GET    | `/api/entries/:id`    | Get a single entry   
 | GET | `/api/entries/genres`    | Get all distinct genres from the user's entries 
-| GET | `/api/entries/stats`     | Get listening statistics for the current user 
+| GET | `/api/entries/stats`     | Get listening statistics (total entries, average rating, genre breakdown, rating distribution)
 | POST | `/api/entries`          | Create a new entry                 
 | PUT    | `/api/entries/:id`    | Update an entry                    
 | DELETE | `/api/entries/:id`    | Delete an entry
