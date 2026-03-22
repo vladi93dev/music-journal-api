@@ -20,7 +20,7 @@ app.use('/api/auth', authRoutes);
 
 
 const server = app.listen(process.env.PORT || 3001, "0.0.0.0", () => {
-    console.log(`Listening on PORT: ${PORT}`);
+    console.log(`Listening on PORT: ${process.env.PORT}`);
 });
 
 // Handle unhandled promise rejections (e.g., database connection errors)
