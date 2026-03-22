@@ -10,7 +10,6 @@ config();
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -20,7 +19,7 @@ app.use('/api/albums', albumsRoutes);
 app.use('/api/auth', authRoutes);
 
 
-app.listen(PORT, () => {
+const server = app.listen(process.env.PORT || 3001, "0.0.0.0", () => {
     console.log(`Listening on PORT: ${PORT}`);
 });
 
