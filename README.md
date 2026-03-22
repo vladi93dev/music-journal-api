@@ -3,7 +3,7 @@
 A RESTful API for logging and tracking personal music listening history. Built as a portfolio project to demonstrate backend development with Node.js, Express, and PostgreSQL.
 
 ## Live API
-Base URL: `http://187.124.163.233`
+Base URL: `http://music.vladisemyonov.com`
 
 ---
 
