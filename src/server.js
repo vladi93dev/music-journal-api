@@ -1,5 +1,6 @@
 import { connectDB, disconnectDB, prisma } from './config/db.js';
 import { config } from 'dotenv';
+import cors from 'cors';
 import express from 'express';
 
 import usersRoutes from './routes/users.route.js';
@@ -14,8 +15,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use('/api/users', usersRoutes);
-app.use('/api/albums', albumsRoutes);
+app.use('/api/entries', albumsRoutes);
 app.use('/api/auth', authRoutes);
 
 
