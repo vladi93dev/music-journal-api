@@ -32,8 +32,6 @@ const getEntryById = async (req, res) => {
         }
 
         res.status(200).json(entry);
-
-        
     } catch(error) {
         res.status(400).json()
     }
@@ -51,10 +49,18 @@ const createEntry = async (req, res) => {
             note,
             userId: req.user.userId
         }});
+
         res.status(200).json({ message: `${newEntry.title} added` });
     } catch(error) {
+        if(error.code === "P2002") {
+            return res.status(409).json({ message: "You already added this album"});
+        }
+
         res.status(400).json({ message: `error: ${error.message}`});
     }
+
+   
+    
 }
 
 const updateEntryById = async (req, res) => {
@@ -65,7 +71,7 @@ const updateEntryById = async (req, res) => {
             return res.status(404).json({message: "Entry not found"});
         }
         
-        const entryUpdated = await prisma.entry.update({
+        await prisma.entry.update({
             where: { id: req.params.id },
             data: req.validated 
         });
@@ -73,6 +79,10 @@ const updateEntryById = async (req, res) => {
         res.status(200).json(`${entry.title} has been updated`);
         
     } catch(error) {
+        if(error.code === "P2002") {
+            return res.status(409).json({ message: "You already added this album"})
+        }
+
         return res.status(400).json({ message: `error: ${error}`})
     }
 }
@@ -105,14 +115,18 @@ const deleteEntryById = async(req, res) => {
 }
 
 const getEntriesGenres = async(req, res) => {
+    try {
+        const entries = await prisma.entry.findMany({
+            where: { userId: req.user.userId },
+            select: { genre: true },
+            distinct: ['genre']
+        });
 
-    const entries = await prisma.entry.findMany({
-        where: { userId: req.user.userId },
-        select: { genre: true },
-        distinct: ['genre']
-    });
-
-    res.status(200).json(entries.map(entry => entry.genre));
+        res.status(200).json(entries.map(entry => entry.genre));
+    } catch(error) {
+        res.status(400).json(error);
+    }
+   
 }
 
 const getStats = async(req, res) => {
@@ -161,7 +175,7 @@ const getStats = async(req, res) => {
             })
         ])
 
-         res.status(500).json({
+         res.status(200).json({
                 totalEntries,
                 averageRating: parseFloat(ratingData._avg.rating.toFixed(1)),
                 highest: highestEntry,
